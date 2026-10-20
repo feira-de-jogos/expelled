@@ -6,7 +6,7 @@ export default defineConfig({
   base: "/",
   server: {
     port: 5173,
-    host: true,
+    host: "::",
     https: {},
     proxy: {
       "/socket.io": {
