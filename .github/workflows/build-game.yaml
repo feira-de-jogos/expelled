@@ -1,4 +1,4 @@
-name: Build and Push game (OCI via Buildpacks)
+name: Build and Push game (Docker)
 
 on:
   push:
@@ -32,16 +32,12 @@ jobs:
         id: vars
         run: echo "tag=$(echo ${GITHUB_SHA} | cut -c1-7)" >> "$GITHUB_OUTPUT"
 
-      - name: Build OCI image with Cloud Native Buildpacks
-        uses: buildpacks/github-actions/setup-pack@v5.9.2
-
-      - name: Run pack build
+      - name: Build Docker image
         working-directory: ./
         run: |
-          pack build ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }} \
-            --builder paketobuildpacks/builder-jammy-base \
-            --env "BP_NODE_VERSION=24" \
-            --env "PYTHON=python3" \
-            --path . \
-            --publish \
-            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker build \
+            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }} \
+            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            .
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
