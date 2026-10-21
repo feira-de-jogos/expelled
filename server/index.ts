@@ -688,8 +688,8 @@ const PORT = 3000;
 
 initVoiceWorker()
   .then(() => {
-    server.listen(PORT, "0.0.0.0", () =>
-      console.log(`Servidor rodando em http://0.0.0.0:${PORT}`),
+    server.listen(PORT, "::", () =>
+      console.log(`Servidor rodando em http://[::]:${PORT}`),
     );
   })
   .catch((err) => {
